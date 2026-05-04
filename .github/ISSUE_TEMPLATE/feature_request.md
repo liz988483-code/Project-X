@@ -1,0 +1,1 @@
+---\nname: Feature Request\ndescription: Suggest a new feature\n---\n\n## Problem Statement\n\n## Proposed Solution\n\n## Alternatives Considered\n\n## Additional Context

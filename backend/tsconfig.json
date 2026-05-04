@@ -1,0 +1,11 @@
+{
+  "references": [
+    { "path": "./api-gateway" },
+    { "path": "./services/user-service" },
+    { "path": "./services/product-service" },
+    { "path": "./services/order-service" },
+    { "path": "./shared" }
+  ],
+  "files": [],
+  "exclude": ["node_modules", "dist"]
+}

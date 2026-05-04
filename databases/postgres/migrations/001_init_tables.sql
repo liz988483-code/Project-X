@@ -1,0 +1,1 @@
+-- Initial database schema\nCREATE TABLE users (\n    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n    email VARCHAR(255) UNIQUE NOT NULL,\n    name VARCHAR(255),\n    created_at TIMESTAMP DEFAULT NOW()\n);

@@ -1,0 +1,82 @@
+name: CI - Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: '**/package.json'
+    
+    - name: Install dependencies
+      run: |
+        cd frontend/web && npm ci
+        cd ../../backend/api-gateway && npm ci
+    
+    - name: Lint frontend
+      run: cd frontend/web && npm run lint
+    
+    - name: Type check frontend
+      run: cd frontend/web && npm run type-check
+    
+    - name: Test frontend
+      run: cd frontend/web && npm test -- --passWithNoTests
+    
+    - name: Lint backend
+      run: cd backend/api-gateway && npm run lint
+    
+    - name: Build frontend
+      run: cd frontend/web && npm run build
+    
+    - name: Build backend
+      run: cd backend/api-gateway && npm run build
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifacts
+        path: |
+          frontend/web/.next
+          backend/api-gateway/dist
+        retention-days: 7
+
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Run OWASP Dependency Check
+      uses: dependency-check/Dependency-Check_Action@main
+      with:
+        project: 'soko-marketplace'
+        path: '.'
+        format: 'HTML'
+        args: >
+          --scan **/package.json
+          --out reports/
+          --failOnCVSS 7
+    
+    - name: Upload security report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-reports
+        path: reports/
+        retention-days: 30

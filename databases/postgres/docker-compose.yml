@@ -1,0 +1,1 @@
+version: '3.8'\nservices:\n  postgres:\n    image: postgres:15\n    environment:\n      POSTGRES_USER: soko\n      POSTGRES_PASSWORD: soko123\n      POSTGRES_DB: soko\n    ports:\n      - "5432:5432"\n    volumes:\n      - postgres_data:/var/lib/postgresql/data\n\nvolumes:\n  postgres_data:

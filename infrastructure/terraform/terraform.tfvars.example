@@ -1,0 +1,1 @@
+# Terraform variables example\nregion = "us-east-1"\nenvironment = "dev"

@@ -1,0 +1,97 @@
+name: CD - Deploy to AWS
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: soko-marketplace
+  ECS_CLUSTER: soko-cluster
+  ECS_SERVICE: soko-service
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+    
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    
+    - name: Build and push frontend image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        cd frontend/web
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY-frontend:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY-frontend:$IMAGE_TAG
+    
+    - name: Build and push API Gateway image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        cd backend/api-gateway
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY-api-gateway:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY-api-gateway:$IMAGE_TAG
+    
+    - name: Update ECS service
+      run: |
+        # Update frontend service
+        aws ecs update-service \
+          --cluster $ECS_CLUSTER \
+          --service soko-frontend \
+          --force-new-deployment
+        
+        # Update API Gateway service
+        aws ecs update-service \
+          --cluster $ECS_CLUSTER \
+          --service soko-api-gateway \
+          --force-new-deployment
+    
+    - name: Wait for deployment to complete
+      run: |
+        sleep 60
+        echo "Deployment in progress..."
+    
+    - name: Run smoke tests
+      run: |
+        # Test frontend
+        curl -f https://soko.example.com/health || exit 1
+        
+        # Test API Gateway
+        curl -f https://api.soko.example.com/health || exit 1
+    
+    - name: Notify on success
+      if: success()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: success
+        channel: '#deployments'
+        author_name: GitHub Actions
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    
+    - name: Notify on failure
+      if: failure()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: failure
+        channel: '#deployments'
+        author_name: GitHub Actions
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

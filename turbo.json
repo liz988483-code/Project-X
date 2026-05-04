@@ -1,0 +1,1 @@
+{\n  "pipeline": {\n    "build": {\n      "outputs": ["dist/**", ".next/**"]\n    },\n    "test": {\n      "outputs": []\n    },\n    "lint": {\n      "outputs": []\n    }\n  }\n}

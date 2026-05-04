@@ -1,0 +1,49 @@
+services:
+  - type: web_service
+    name: soko-api-gateway
+    env: docker
+    plan: starter
+    region: oregon
+    branch: main
+    dockerfilePath: backend/api-gateway/Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3001"
+      - key: JWT_SECRET
+        value: your_jwt_secret_here
+      - key: JWT_ACCESS_EXPIRY
+        value: 15m
+      - key: JWT_REFRESH_EXPIRY
+        value: 7d
+      - key: CORS_ORIGINS
+        value: https://your-vercel-app.vercel.app
+      - key: FRONTEND_URL
+        value: https://your-vercel-app.vercel.app
+      - key: DATABASE_URL
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CLOUDINARY_UPLOAD_FOLDER
+        value: soko
+      - key: PRODUCT_SERVICE_URL
+        value: http://localhost:3003
+      - key: ORDER_SERVICE_URL
+        value: http://localhost:3004
+      - key: PAYMENT_SERVICE_URL
+        value: http://localhost:3005
+      - key: USER_SERVICE_URL
+        value: http://localhost:3002
+      - key: CHAT_SERVICE_URL
+        value: http://localhost:3007
+      - key: NOTIFICATION_SERVICE_URL
+        value: http://localhost:3006
+      - key: SEARCH_SERVICE_URL
+        value: http://localhost:3008
+      - key: ANALYTICS_SERVICE_URL
+        value: http://localhost:3009

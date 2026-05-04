@@ -1,0 +1,230 @@
+version: '3.8'
+
+services:
+  # --------------------
+  # Databases
+  # --------------------
+  postgres:
+    image: postgres:15-alpine
+    container_name: soko-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./databases/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - soko-network
+
+  mongodb:
+    image: mongo:6
+    container_name: soko-mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./databases/mongodb/init.js:/docker-entrypoint-initdb.d/init.js
+    networks:
+      - soko-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: soko-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - soko-network
+
+  elasticsearch:
+    image: elasticsearch:8.11.1
+    container_name: soko-elasticsearch
+    restart: always
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - soko-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: soko-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - soko-network
+
+  # --------------------
+  # Backend Services
+  # --------------------
+  api-gateway:
+    build: ./backend/api-gateway
+    container_name: soko-api-gateway
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      JWT_SECRET: ${JWT_SECRET}
+      REDIS_URL: redis://redis:6379
+      USER_SERVICE_URL: http://user-service:3002
+      PRODUCT_SERVICE_URL: http://product-service:3003
+      ORDER_SERVICE_URL: http://order-service:3004
+      PAYMENT_SERVICE_URL: http://payment-service:3005
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - soko-network
+
+  user-service:
+    build: ./backend/services/user-service
+    container_name: soko-user-service
+    restart: always
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: development
+      PORT: 3002
+      DATABASE_URL: ${USER_DB_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - soko-network
+
+  product-service:
+    build: ./backend/services/product-service
+    container_name: soko-product-service
+    restart: always
+    ports:
+      - "3003:3003"
+    environment:
+      NODE_ENV: development
+      PORT: 3003
+      DATABASE_URL: ${PRODUCT_DB_URL}
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      - postgres
+      - redis
+      - elasticsearch
+    networks:
+      - soko-network
+
+  order-service:
+    build: ./backend/services/order-service
+    container_name: soko-order-service
+    restart: always
+    ports:
+      - "3004:3004"
+    environment:
+      NODE_ENV: development
+      PORT: 3004
+      DATABASE_URL: ${ORDER_DB_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - soko-network
+
+  payment-service:
+    build: ./backend/services/payment-service
+    container_name: soko-payment-service
+    restart: always
+    ports:
+      - "3005:3005"
+    environment:
+      NODE_ENV: development
+      PORT: 3005
+      DATABASE_URL: ${PAYMENT_DB_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+    depends_on:
+      - postgres
+    networks:
+      - soko-network
+
+  # --------------------
+  # Frontend & Nginx
+  # --------------------
+  frontend:
+    build: ./frontend/web
+    container_name: soko-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://api-gateway:3001
+    depends_on:
+      - api-gateway
+    networks:
+      - soko-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: soko-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./frontend/web/.next/static:/usr/share/nginx/html/_next/static
+    depends_on:
+      - frontend
+      - api-gateway
+    networks:
+      - soko-network
+
+# --------------------
+# Volumes
+# --------------------
+volumes:
+  postgres_data:
+  redis_data:
+  mongodb_data:
+  elasticsearch_data:
+  rabbitmq_data:
+
+# --------------------
+# Network
+# --------------------
+networks:
+  soko-network:
+    driver: bridge

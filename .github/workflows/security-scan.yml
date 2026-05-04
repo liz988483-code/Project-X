@@ -1,0 +1,1 @@
+name: Security Scan\n\non: schedule\n  - cron: '0 0 * * 0'\n\njobs:\n  security:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v3\n      - run: npm audit\n      - run: ./tests/security/dependency-check.sh

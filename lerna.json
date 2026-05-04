@@ -1,0 +1,1 @@
+{\n  "packages": [\n    "frontend/web",\n    "frontend/mobile",\n    "backend/*"\n  ],\n  "version": "0.0.0",\n  "npmClient": "npm",\n  "useWorkspaces": true\n}

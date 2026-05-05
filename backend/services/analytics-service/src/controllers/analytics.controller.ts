@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { AnalyticsService } from '../services/analytics.service'
-import { ApiError } from '../../../shared/utils/api-error'
-import { logger } from '../../../shared/utils/logger'
+import { ApiError } from '../../../../shared/utils/api-error'
+import { logger } from '../../../../shared/utils/logger'
 
 export class AnalyticsController {
   static async getDashboardMetrics(req: Request, res: Response) {

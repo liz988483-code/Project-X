@@ -1,8 +1,6 @@
 import { Suspense } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingBag, Sparkles, Shield, Truck } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import LoadingSpinner from '@/components/shared/LoadingSpinner'
 
 export default function AuthLayout({

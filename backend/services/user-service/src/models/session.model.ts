@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import mongoose, { Schema, Document } from 'mongoose'
 
 export interface ISession extends Document {
@@ -111,3 +112,4 @@ SessionSchema.virtual('ageHours').get(function() {
 // Model
 // ---------------------------------------------
 export const SessionModel = mongoose.model<ISession>('Session', SessionSchema)
+

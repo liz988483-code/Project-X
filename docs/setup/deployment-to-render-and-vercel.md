@@ -26,12 +26,15 @@ The Prisma schema in `backend/services/user-service/prisma/schema.prisma` alread
 Create a Cloudinary account, then copy:
 
 ```env
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_SECRET=iMMCV4pRzqRiPVx9CxmD0KndOBY
+CLOUDINARY_API_KEY=278272538658413
+CLOUDINARY_API_SECRET=iMMCV4pRzqRiPVx9CxmD0KndOBY
 CLOUDINARY_UPLOAD_FOLDER=soko
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-NEXT_PUBLIC_CLOUDINARY_URL=https://res.cloudinary.com/your_cloudinary_cloud_name
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=soko
+CLOUDINARY_CLOUD_NAME=ddqd3gvuf
+CLOUDINARY_CLOUD_NAME=ddqd3gvuf
+NEXT_PUBLIC_CLOUDINARY_URL=https://res.cloudinary.com/
 ```
 
 Signed uploads are supported with `CLOUDINARY_API_KEY` and `CLOUDINARY_API_SECRET`. If you prefer unsigned uploads, set `CLOUDINARY_UPLOAD_PRESET` instead.
@@ -82,8 +85,8 @@ NEXT_PUBLIC_API_URL=https://your-render-api-gateway.onrender.com
 NEXT_PUBLIC_SITE_URL=https://your-vercel-app.vercel.app
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 NEXT_PUBLIC_CLOUDINARY_URL=https://res.cloudinary.com/your_cloudinary_cloud_name
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_CLOUD_NAME=soko
+CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 CLOUDINARY_UPLOAD_FOLDER=soko
 DATABASE_URL=your_neon_database_url

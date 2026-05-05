@@ -12,15 +12,15 @@ services:
       - key: PORT
         value: "3001"
       - key: JWT_SECRET
-        value: your_jwt_secret_here
+        value: 86d789a7f861dd2742f0371db8dfb823e7104d7e643e162a6d668e0d20a1fb4b
       - key: JWT_ACCESS_EXPIRY
         value: 15m
       - key: JWT_REFRESH_EXPIRY
         value: 7d
       - key: CORS_ORIGINS
-        value: https://your-vercel-app.vercel.app
+        value: https://soko-mauve.vercel.app
       - key: FRONTEND_URL
-        value: https://your-vercel-app.vercel.app
+        value: https://soko-mauve.vercel.app
       - key: DATABASE_URL
         sync: false
       - key: CLOUDINARY_CLOUD_NAME

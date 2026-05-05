@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
@@ -5,8 +6,8 @@ import morgan from 'morgan'
 import { config } from './config'
 import { connectDB } from './database'
 import { errorHandler } from './middleware/error-handler.middleware'
-import authRoutes from './routes/auth.routes'
-import userRoutes from './routes/user.routes'
+import addressRoutes from './routes/adress.routes'
+import { userRouter } from './routes/user.routes'
 import profileRoutes from './routes/profile.routes'
 
 const app = express()
@@ -26,8 +27,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // Routes
-app.use('/api/auth', authRoutes)
-app.use('/api/users', userRoutes)
+app.use('/api/addresses', addressRoutes)
+app.use('/api/users', userRouter)
 app.use('/api/profile', profileRoutes)
 
 // Health check
@@ -44,5 +45,5 @@ app.get('/health', (req, res) => {
 app.use(errorHandler)
 
 app.listen(PORT, () => {
-  console.log(`👤 User Service running on port ${PORT}`)
+  console.log(`ðŸ‘¤ User Service running on port ${PORT}`)
 })

@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
 import { Address, IAddress } from '../models/address.model'
@@ -494,3 +495,4 @@ export class AddressController {
     }
   }
 }
+

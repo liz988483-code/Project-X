@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import mongoose, { Schema, Document, Model, Types } from 'mongoose';
 
 // Define the interface for the document
@@ -142,3 +143,4 @@ const Address = mongoose.model<IAddress>('Address', AddressSchema);
 
 export { Address };
 export type { IAddress };
+

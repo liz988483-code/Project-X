@@ -8,7 +8,6 @@ import {
   Home, 
   Briefcase,
   Check,
-  X,
   Phone
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'

@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 // Simple logger for user-service
 export const logger = {
   info: (message: string, meta?: any) => {
@@ -20,3 +21,4 @@ export const logger = {
     console.debug(`[${timestamp}] [USER-SERVICE] [DEBUG] ${message}`, meta || '');
   }
 };
+

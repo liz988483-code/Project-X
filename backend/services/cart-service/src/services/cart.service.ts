@@ -1,13 +1,13 @@
 // backend/services/order-service/src/services/cart.service.ts
 import { Types } from 'mongoose';
 import { Cart, ICartDocument } from '../models/cart.model';
-import { ICartItem, CartTotals, AddToCartRequest } from '../../../shared/types/cart.types';
+import { ICartItem, CartTotals, AddToCartRequest } from '../../../../shared/types/cart.types';
 import { 
   ApiError, 
   BadRequestError, 
   NotFoundError,
   CartItemNotFoundError 
-} from '../../../shared/utils/api-error';
+} from '../../../../shared/utils/api-error';
 
 export class CartService {
   /**

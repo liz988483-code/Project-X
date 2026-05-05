@@ -1,0 +1,1 @@
+{"extends":"../../tsconfig.base.json","compilerOptions":{"outDir":"../../dist/product-service","rootDir":"./src","module":"Node16","moduleResolution":"node16","resolveJsonModule":true},"include":["src/**/*"],"exclude":["node_modules","dist"]}

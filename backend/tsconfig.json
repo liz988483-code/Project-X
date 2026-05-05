@@ -3,7 +3,8 @@
     { "path": "./api-gateway" },
     { "path": "./services/user-service" },
     { "path": "./services/product-service" },
-    { "path": "./services/order-service" },
+    { "path": "./services/cart-service" },
+    { "path": "./services/analytics-service" },
     { "path": "./shared" }
   ],
   "files": [],

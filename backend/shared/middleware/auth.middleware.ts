@@ -2,13 +2,14 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { ApiError, UnauthorizedError } from '../utils/api-error';
+import { UserRole } from '../types/user.types';
 
 // Define JwtPayload interface
 interface JwtPayload {
   userId: string;
   email: string;
   name: string;
-  role: string;
+  role: UserRole;
 }
 
 // Define User interface
@@ -16,7 +17,7 @@ interface User {
   id: string;
   email: string;
   name: string;
-  role: string;
+  role: UserRole;
   isSeller: boolean;
   isAdmin: boolean;
   permissions?: string[];

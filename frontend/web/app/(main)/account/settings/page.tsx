@@ -6,7 +6,6 @@ import {
   CreditCard, 
   Globe, 
   Eye,
-  Lock,
   Trash2,
   Download,
   UserX,

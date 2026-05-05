@@ -1,5 +1,11 @@
 {
   "framework": "nextjs",
   "buildCommand": "npm run build",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "env": {
+    "NEXT_PUBLIC_API_URL": "@next_public_api_url",
+    "NEXT_PUBLIC_SITE_URL": "@next_public_site_url",
+    "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME": "@next_public_cloudinary_cloud_name",
+    "NEXT_PUBLIC_CLOUDINARY_URL": "@next_public_cloudinary_url"
+  }
 }
